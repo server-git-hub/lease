@@ -31,3 +31,5 @@ com:
     username: minioadmin
     password: minioadmin
     bucket: lease
+springdoc:
+  default-flat-param-object: true

@@ -40,7 +40,6 @@ public class ApartmentInfo extends BaseEntity {
     @Schema(description = "所处省份id")
     @TableField(value = "province_id")
     private Long provinceId;
-
     @Schema(description = "所处区域名称")
     @TableField(value = "province_name")
     private String provinceName;

@@ -4,4 +4,21 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.lease.web.admin.mapper.FeeKeyMapper">
 
+
+    <resultMap id="keyorvalue" type="com.atguigu.lease.web.admin.vo.fee.FeeKeyVo">
+        <id column="kid" property="id"/>
+        <result column="kname" property="name"/>
+        <collection property="feeValueList" ofType="com.atguigu.lease.web.admin.vo.fee.FeeValueVo">
+            <id column="vid" property="id"/>
+            <result column="vname" property="name"/>
+            <result column="key_id" property="feeKeyId"/>
+        </collection>
+    </resultMap>
+
+    <select id="selectAll" resultMap="keyorvalue">
+        select fk.id kid,fk.name kname,fv.id vid,fv.name vname,fv.fee_key_id key_id
+        from fee_key fk left join fee_value fv
+        on fk.id=fv.fee_key_id and fv.is_deleted=0
+        where fk.is_deleted=0;
+    </select>
 </mapper>

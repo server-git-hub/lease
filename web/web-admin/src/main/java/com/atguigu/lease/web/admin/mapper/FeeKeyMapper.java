@@ -13,7 +13,7 @@ import java.util.List;
 * @Entity com.atguigu.lease.model.FeeKey
 */
 public interface FeeKeyMapper extends BaseMapper<FeeKey> {
-
+    List<FeeKeyVo> selectAll();
 }
 
 

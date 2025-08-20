@@ -12,5 +12,5 @@ import java.util.List;
 * @createDate 2023-07-24 15:48:00
 */
 public interface FeeKeyService extends IService<FeeKey> {
-
+    List<FeeKeyVo> customList();
 }

@@ -46,7 +46,7 @@ public class FileServiceImpl implements FileService {
                 "Version" : "2012-10-17"
             } """;
             policy=policy.formatted(minioProperties.getBucket());
-            minioClient.setBucketPolicy(SetBucketPolicyArgs.builder().config(policy).build());
+            minioClient.setBucketPolicy(SetBucketPolicyArgs.builder().bucket(minioProperties.getBucket()).config(policy).build());
         }
         String path=new SimpleDateFormat("yyyyMMdd").format(new Date());
         String objectname=path+"/"+UUID.randomUUID().toString().replace("-","")+file.getOriginalFilename();

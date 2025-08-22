@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface LeaseAgreementService extends IService<LeaseAgreement> {
 
+    void customPage(IPage<AgreementVo> page, AgreementQueryVo queryVo);
+
+    AgreementVo customById(Long id);
 }

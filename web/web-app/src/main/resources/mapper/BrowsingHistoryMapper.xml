@@ -4,4 +4,31 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.lease.web.app.mapper.BrowsingHistoryMapper">
 
+
+    <resultMap id="rMap" type="com.atguigu.lease.web.app.vo.history.HistoryItemVo">
+        <id column="id" property="id"/>
+        <result column="room_id" property="roomId"/>
+        <result column="room_number" property="roomNumber"/>
+        <result column="ai_name" property="apartmentName"/>
+        <collection property="roomGraphVoList" ofType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+            <result column="gi_name" property="name"/>
+        </collection>
+        <collection property="roomGraphVoList" select="pageAll2" column="room_id"/>
+    </resultMap>
+
+    <select id="pageAll" resultMap="rMap">
+        select bh.*,ri.room_number,ri.rent,
+               ai.name ai_name,ai.province_name,ai.city_name,ai.district_name
+        from browsing_history bh
+                 left join room_info ri
+                           on bh.room_id=ri.id and ri.is_deleted=0
+                 left join apartment_info ai
+                           on ri.apartment_id=ai.id and ai.is_deleted=0
+        where bh.is_deleted=0
+    </select>
+
+    <select id="pageAll2" resultType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+        select gi.name,gi.url from graph_info gi
+              where gi.item_type=2 and gi.item_id=#{room_id} and gi.is_deleted=0;
+    </select>
 </mapper>

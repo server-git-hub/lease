@@ -23,7 +23,19 @@ import java.util.List;
 public class LeaseAgreementServiceImpl extends ServiceImpl<LeaseAgreementMapper, LeaseAgreement>
         implements LeaseAgreementService {
 
+    @Autowired
+    private LeaseAgreementMapper leaseAgreementMapper;
 
+    @Override
+    public List<AgreementItemVo> customList() {
+        List<AgreementItemVo> list=leaseAgreementMapper.selectAll();
+        return list;
+    }
+
+    @Override
+    public AgreementDetailVo customById(Long id) {
+        return leaseAgreementMapper.ById(id);
+    }
 }
 
 

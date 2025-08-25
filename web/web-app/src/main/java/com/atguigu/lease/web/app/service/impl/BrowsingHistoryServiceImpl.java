@@ -25,7 +25,13 @@ import java.util.Date;
 public class BrowsingHistoryServiceImpl extends ServiceImpl<BrowsingHistoryMapper, BrowsingHistory>
         implements BrowsingHistoryService {
 
+    @Autowired
+    private BrowsingHistoryMapper browsingHistoryMapper;
 
+    @Override
+    public void pageAll(IPage<HistoryItemVo> page) {
+        browsingHistoryMapper.pageAll(page);
+    }
 }
 
 

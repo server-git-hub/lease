@@ -5,4 +5,76 @@
 <mapper namespace="com.atguigu.lease.web.app.mapper.LeaseAgreementMapper">
 
 
+
+    <resultMap id="rMap" type="com.atguigu.lease.web.app.vo.agreement.AgreementItemVo">
+        <id column="id" property="id"/>
+        <result column="ai_name" property="apartmentName"/>
+        <result column="status" property="leaseStatus"/>
+        <collection property="roomGraphVoList" ofType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+            <result column="gi_name" property="name"/>
+        </collection>
+
+    </resultMap>
+
+    <select id="selectAll" resultMap="rMap">
+        select la.*,
+               gi.name gi_name,gi.url,
+               ai.name ai_name,
+               ri.room_number,if(ri.is_release,1,0) isRenewable
+        from lease_agreement la
+                 left join room_info ri
+                           on la.room_id=ri.id and ri.is_deleted=0
+                 left join graph_info gi
+                           on la.room_id=gi.item_id and gi.item_type=2 and gi.is_deleted=0
+                 left join apartment_info ai
+                           on la.apartment_id=ai.id and ai.is_deleted=0
+        where la.is_deleted=0;
+    </select>
+
+
+    <resultMap id="ByIdMap" type="com.atguigu.lease.web.app.vo.agreement.AgreementDetailVo">
+        <id column="id" property="id"/>
+        <result column="ai_name" property="apartmentName"/>
+        <result column="ri_room_number" property="roomNumber"/>
+        <result column="pt_name" property="paymentTypeName"/>
+        <result column="month_count" property="leaseTermMonthCount"/>
+        <result column="unit" property="leaseTermUnit"/>
+        <result column="" property=""/>
+        <collection property="apartmentGraphVoList" ofType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+            <result column="gi1_name" property="name"/>
+            <result column="gi1_url" property="url"/>
+        </collection>
+        <collection property="roomGraphVoList" ofType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+            <result column="gi2_name" property="name"/>
+            <result column="gi2_url" property="url"/>
+        </collection>
+    </resultMap>
+
+    <select id="ById" resultMap="ByIdMap">
+        select la.*,
+               ai.name ai_name,
+               gi1.name gi1_name,gi1.url gi1_url,
+               gi2.name gi2_name,gi2.url gi2_url,
+               ri.room_number,
+               pt.name pt_name,
+               lt.month_count,lt.unit
+        from lease_agreement la
+                 left join apartment_info ai
+                           on la.apartment_id=ai.id and ai.is_deleted=0
+                 left join room_info ri
+                           on la.room_id=ri.id and ri.is_deleted=0
+                 left join graph_info gi1
+                           on ai.id=gi1.item_id and gi1.item_type=1 and gi1.is_deleted=0
+                 left join graph_info gi2
+                           on ri.id=gi2.item_id and gi2.item_type=2 and gi2.is_deleted=0
+                 left join room_lease_term rlt
+                           on la.room_id=rlt.room_id and rlt.is_deleted=0
+                 left join lease_term lt
+                           on rlt.lease_term_id=lt.id and lt.is_deleted=0
+                 left join room_payment_type rpt
+                           on la.room_id=rpt.room_id and rpt.is_deleted=0
+                 left join payment_type pt
+                           on rpt.payment_type_id=pt.id and pt.is_deleted=0
+        where la.id=#{id} and la.is_deleted=0;
+    </select>
 </mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.atguigu.lease.web.app.mapper.ViewAppointmentMapper">
+
+    <resultMap id="rMap" type="com.atguigu.lease.web.app.vo.appointment.AppointmentItemVo">
+        <id column="id" property="id"/>
+        <result column="ai_name" property="apartmentName"/>
+        <collection property="graphVoList" ofType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+            <result column="gi_name" property="name"/>
+        </collection>
+    </resultMap>
+
+
+
+
+    <select id="selectAll" resultMap="rMap">
+        select
+            va.*,ai.name ai_name,gi.name gi_name,gi.url
+        from view_appointment va left join apartment_info ai
+                       on va.apartment_id=ai.id and ai.is_deleted=0
+                left join graph_info gi
+                       on va.apartment_id=gi.item_id and item_type=2 and gi.is_deleted=0
+        where va.is_deleted=0;
+    </select>
+
+    <resultMap id="AppointmentDetailVoMap" type="com.atguigu.lease.web.app.vo.appointment.AppointmentDetailVo">
+        <id column="va_id" property="id"/>
+        <result column="va_name" property="name"/>
+        <result column="va_phone" property="phone"/>
+        <result column="va_apartment_id" property="apartmentId"/>
+        <association property="apartmentItemVo" javaType="com.atguigu.lease.web.app.vo.apartment.ApartmentItemVo">
+            <id column="id" property="id"/>
+            <result column="rent" property="minRent"/>
+            <collection property="labelInfoList" ofType="com.atguigu.lease.model.entity.LabelInfo">
+                <id column="li_id" property="id"/>
+                <result column="li_name" property="name"/>
+                <result column="li_type" property="type"/>
+            </collection>
+            <collection property="graphVoList" ofType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+                <result column="gi_name" property="name"/>
+            </collection>
+
+        </association>
+    </resultMap>
+
+    <select id="ById" resultMap="AppointmentDetailVoMap">
+        select
+            va.id va_id,va.user_id,va.name va_name,va.phone va_phone,va.apartment_id va_apartment_id,
+            va.appointment_time,va.additional_info,va.appointment_status,ai.*,min(ri.rent) rent,
+            li.id li_id,li.type li_type,li.name li_name,
+            gi.id gi_id,gi.name gi_name,gi.url
+        from view_appointment va
+                 left join apartment_info ai
+                           on va.apartment_id=ai.id and ai.is_deleted=0
+                 left join room_info ri
+                           on va.apartment_id=ri.apartment_id and ri.is_deleted=0
+                 left join apartment_label al
+                           on va.apartment_id=al.apartment_id and al.is_deleted=0
+                 left join label_info li
+                           on al.label_id=li.id and li.type=1 and li.is_deleted=0
+                 left join graph_info gi
+                           on va.apartment_id=gi.item_id and gi.item_type=2 and gi.is_deleted=0
+        where va.id=#{id} and va.is_deleted=0;
+    </select>
+</mapper>

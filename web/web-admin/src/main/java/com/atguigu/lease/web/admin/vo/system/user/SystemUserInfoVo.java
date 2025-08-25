@@ -14,4 +14,11 @@ public class SystemUserInfoVo {
     @Schema(description = "用户头像")
     private String avatarUrl;
 
+    public SystemUserInfoVo(String name, String avatarUrl) {
+        this.name = name;
+        this.avatarUrl = avatarUrl;
+    }
+
+    public SystemUserInfoVo() {
+    }
 }

@@ -16,8 +16,8 @@ public class GlobalException {
 
 
     @ExceptionHandler(notDeleteException.class)
-    public Result notDeleteException(notDeleteException e){
+    public Result notDeleteException(notDeleteException e) {
         e.printStackTrace();
-        return Result.build(e.getCode(),e.getMessage());
+        return Result.build(e.getCode(), e.getMessage());
     }
 }

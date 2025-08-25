@@ -19,10 +19,13 @@ import java.util.List;
 @Tag(name = "租期信息")
 public class LeaseTermController {
 
+    @Autowired
+    private LeaseTermService leaseTermService;
 
     @GetMapping("listByRoomId")
     @Operation(summary = "根据房间id获取可选获取租期列表")
     public Result<List<LeaseTerm>> list(@RequestParam Long id) {
-        return Result.ok();
+        List<LeaseTerm> list=leaseTermService.customByroomId(id);
+        return Result.ok(list);
     }
 }

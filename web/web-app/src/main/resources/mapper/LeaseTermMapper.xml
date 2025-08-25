@@ -5,4 +5,12 @@
 <mapper namespace="com.atguigu.lease.web.app.mapper.LeaseTermMapper">
 
 
+    <select id="selectByroomId" resultType="com.atguigu.lease.model.entity.LeaseTerm">
+        select lt.* from room_info ri
+                 left join room_lease_term rlt
+                           on ri.id=rlt.room_id and rlt.is_deleted=0
+                 left join lease_term lt
+                           on rlt.lease_term_id=lt.id and lt.is_deleted=0
+        where ri.id=2 and ri.is_deleted=0;
+    </select>
 </mapper>

@@ -18,6 +18,13 @@ import java.util.List;
 public class PaymentTypeServiceImpl extends ServiceImpl<PaymentTypeMapper, PaymentType>
     implements PaymentTypeService{
 
+    @Autowired
+    private PaymentTypeMapper paymentTypeMapper;
+
+    @Override
+    public List<PaymentType> customById(Long id) {
+        return paymentTypeMapper.ById(id);
+    }
 }
 
 

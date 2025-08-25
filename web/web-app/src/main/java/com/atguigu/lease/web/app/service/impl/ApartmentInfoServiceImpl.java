@@ -25,7 +25,13 @@ import java.util.List;
 public class ApartmentInfoServiceImpl extends ServiceImpl<ApartmentInfoMapper, ApartmentInfo>
         implements ApartmentInfoService {
 
+    @Autowired
+    private ApartmentInfoMapper apartmentInfoMapper;
 
+    @Override
+    public ApartmentDetailVo customById(Long id) {
+        return apartmentInfoMapper.ByapartmentId(id);
+    }
 }
 
 

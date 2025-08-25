@@ -4,5 +4,43 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.lease.web.app.mapper.ApartmentInfoMapper">
 
+    <resultMap id="rMap" type="com.atguigu.lease.web.app.vo.apartment.ApartmentDetailVo">
+        <id column="id" property="id"/>
+        <result column="rent" property="minRent"/>
+        <collection property="graphVoList" ofType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+            <result column="gi_name" property="name"/>
+        </collection>
+        <collection property="labelInfoList" ofType="com.atguigu.lease.model.entity.LabelInfo">
+            <id column="li_id" property="id"/>
+            <result column="li_type" property="type"/>
+            <result column="li_name" property="name"/>
+        </collection>
+        <collection property="facilityInfoList" ofType="com.atguigu.lease.model.entity.FacilityInfo">
+            <id column="fi_id" property="id"/>
+            <result column="fi_type" property="type"/>
+            <result column="fi_name" property="name"/>
+        </collection>
+    </resultMap>
 
+    <select id="ByapartmentId" resultMap="rMap">
+        select ai.*,
+               gi.name gi_name,gi.url,
+               li.id li_id,li.type li_type,li.name li_name,
+               fi.id fi_id,fi.type fi_type,fi.name fi_name,fi.icon,
+               ri.rent
+        from apartment_info ai
+                 left join graph_info gi
+                           on ai.id=gi.item_id and gi.item_type=1 and gi.is_deleted=0
+                 left join apartment_label al
+                           on ai.id=al.apartment_id and al.is_deleted=0
+                 left join label_info li
+                           on al.label_id=li.id and li.is_deleted=0
+                 left join apartment_facility af
+                           on ai.id=af.apartment_id and af.is_deleted=0
+                 left join facility_info fi
+                           on af.facility_id=fi.id and fi.is_deleted=0
+                 left join (select apartment_id,min(rent) rent from room_info where is_deleted=0 and apartment_id=#{id}) ri
+                           on ai.id=ri.apartment_id
+        where ai.id=#{id} and ai.is_deleted=0;
+    </select>
 </mapper>

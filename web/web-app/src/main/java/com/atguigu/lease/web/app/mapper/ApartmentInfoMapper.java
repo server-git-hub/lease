@@ -1,6 +1,7 @@
 package com.atguigu.lease.web.app.mapper;
 
 import com.atguigu.lease.model.entity.ApartmentInfo;
+import com.atguigu.lease.web.app.vo.apartment.ApartmentDetailVo;
 import com.atguigu.lease.web.app.vo.apartment.ApartmentItemVo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -15,6 +16,7 @@ import java.math.BigDecimal;
 public interface ApartmentInfoMapper extends BaseMapper<ApartmentInfo> {
 
 
+    ApartmentDetailVo ByapartmentId(Long id);
 }
 
 

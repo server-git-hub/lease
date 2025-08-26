@@ -4,5 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.lease.web.app.mapper.AttrValueMapper">
 
+    <select id="selectAll" resultType="com.atguigu.lease.web.app.vo.attr.AttrValueVo">
+        select av.id id,av.name name,av.attr_key_id attrKeyId,ak.name attrKeyName
+        from room_attr_value rav
+                 left join attr_value av
+                           on rav.attr_value_id=av.id and av.is_deleted=0
+                 left join attr_key ak
+                           on av.attr_key_id=ak.id and ak.is_deleted=0
+        where rav.is_deleted=0 and rav.room_id=#{id};
+    </select>
 
 </mapper>

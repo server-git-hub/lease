@@ -13,4 +13,12 @@
         where ri.id=#{id};
     </select>
 
+
+    <select id="ByroomId" resultType="com.atguigu.lease.model.entity.PaymentType">
+        select pt.id,pt.name,pt.pay_month_count,pt.additional_info
+        from room_payment_type rpt
+                 left join payment_type pt
+                           on rpt.payment_type_id=pt.id and pt.is_deleted=0
+        where rpt.is_deleted=0 and rpt.room_id=#{id};
+    </select>
 </mapper>

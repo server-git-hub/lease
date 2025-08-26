@@ -17,6 +17,10 @@ public interface ApartmentInfoMapper extends BaseMapper<ApartmentInfo> {
 
 
     ApartmentDetailVo ByapartmentId(Long id);
+
+    ApartmentInfo ByroomId(Long id);
+
+    BigDecimal selectMinRent(Long id);
 }
 
 

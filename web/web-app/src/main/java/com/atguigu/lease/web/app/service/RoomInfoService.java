@@ -5,7 +5,6 @@ import com.atguigu.lease.web.app.vo.room.RoomDetailVo;
 import com.atguigu.lease.web.app.vo.room.RoomItemVo;
 import com.atguigu.lease.web.app.vo.room.RoomQueryVo;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -16,4 +15,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface RoomInfoService extends IService<RoomInfo> {
 
 
+    RoomDetailVo customById(Long id);
+
+    void customPage(IPage<RoomItemVo> page, RoomQueryVo queryVo);
+
+    void customPageByApartmentId(IPage<RoomItemVo> page, Long id);
 }

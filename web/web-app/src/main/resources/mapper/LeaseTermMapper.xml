@@ -13,4 +13,13 @@
                            on rlt.lease_term_id=lt.id and lt.is_deleted=0
         where ri.id=2 and ri.is_deleted=0;
     </select>
+
+
+    <select id="ByroomId" resultType="com.atguigu.lease.model.entity.LeaseTerm">
+        select lt.id,lt.month_count,lt.unit
+        from room_lease_term rlt
+                 left join lease_term lt
+                           on rlt.lease_term_id=lt.id and lt.is_deleted=0
+        where rlt.is_deleted=0 and rlt.room_id=#{id};
+    </select>
 </mapper>

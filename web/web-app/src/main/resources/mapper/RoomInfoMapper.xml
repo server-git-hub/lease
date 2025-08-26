@@ -4,4 +4,95 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.atguigu.lease.web.app.mapper.RoomInfoMapper">
 
+    <select id="ByroomId" resultType="com.atguigu.lease.model.entity.ApartmentInfo">
+        select ai.* from room_info ri
+             left join apartment_info ai
+                       on ri.apartment_id=ai.id and ai.is_deleted=0
+        where ri.id=#{id} and ri.is_deleted=0
+    </select>
+
+    <select id="ByStatus" resultType="java.lang.Boolean">
+        select if(status in(2,5,7),1,0) status from room_info ri
+                                                        left join lease_agreement la
+                                                                  on ri.id=la.room_id and la.is_deleted=0
+        where ri.is_deleted=0 and ri.id=#{id};
+    </select>
+
+
+    <resultMap id="RoomItemVoMap" type="com.atguigu.lease.web.app.vo.room.RoomItemVo">
+        <id column="ri_id" property="id"/>
+        <association property="apartmentInfo" javaType="com.atguigu.lease.model.entity.ApartmentInfo">
+            <id column="id" property="id"/>
+        </association>
+        <collection property="graphVoList" select="selectGraph" column="ri_id"/>
+        <collection property="labelInfoList" select="selectLabelInfo" column="ri_id"/>
+    </resultMap>
+
+    <select id="getPage" resultMap="RoomItemVoMap">
+        select ri.id ri_id,ri.room_number,ri.rent,ai.*
+        from room_info ri
+                 join apartment_info ai
+                           on ri.apartment_id=ai.id and ai.is_deleted=0
+            <if test="queryVo.provinceId!=null">
+                and ai.province_id=#{queryVo.provinceId}
+            </if>
+            <if test="queryVo.cityId!=null">
+                and ai.city_id=#{queryVo.cityId}
+            </if>
+            <if test="queryVo.districtId!=null">
+                and ai.district_id=#{queryVo.districtId}
+            </if>
+        where ri.is_deleted=0
+            <if test="queryVo.paymentTypeId!=null">
+                and ri.id in(
+                select rpt.room_id from room_payment_type rpt
+                where rpt.is_deleted=0 and rpt.payment_type_id=#{queryVo.paymentTypeId})
+            </if>
+            <if test="queryVo.minRent!=null">
+                and ri.rent>=#{queryVo.minRent}
+            </if>
+            <if test="queryVo.maxRent!=null">
+                and ri.rent &lt;=#{queryVo.maxRent}
+            </if>
+            <if test="queryVo.orderType!=null">
+                order by rent #{queryVo.orderType}
+            </if>
+    </select>
+    <select id="selectGraph" resultType="com.atguigu.lease.web.app.vo.graph.GraphVo">
+        select * from graph_info gi
+        where gi.item_id=#{ri_id} and gi.item_type=2 and gi.is_deleted=0
+    </select>
+
+    <select id="selectLabelInfo" resultType="com.atguigu.lease.model.entity.LabelInfo">
+        select * from room_label rl
+                          left join label_info li
+                                    on rl.label_id=li.id and li.is_deleted=0
+        where rl.room_id=#{ri_id} and rl.is_deleted=0;
+    </select>
+
+    <resultMap id="RoomItemVoMapByApartmentId" type="com.atguigu.lease.web.app.vo.room.RoomItemVo">
+        <id column="ri_id" property="id"/>
+        <association property="apartmentInfo" javaType="com.atguigu.lease.model.entity.ApartmentInfo">
+            <id column="id" property="id"/>
+        </association>
+        <collection property="graphVoList" select="selectGraph" column="ri_id"/>
+        <collection property="labelInfoList" select="selectLabelInfo" column="ri_id"/>
+    </resultMap>
+
+    <select id="getByApartmentIdPage" resultMap="RoomItemVoMapByApartmentId">
+        select ri.id ri_id,ri.room_number,ri.rent,ai.*
+        from room_info ri
+        join apartment_info ai
+        on ri.apartment_id=ai.id and ai.is_deleted=0 and ai.id=#{id}
+        where ri.is_deleted=0
+    </select>
+
+
+
+
+
+
+
+
+
 </mapper>

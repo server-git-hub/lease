@@ -15,6 +15,8 @@ public interface PaymentTypeMapper extends BaseMapper<PaymentType> {
 
 
     List<PaymentType> ById(Long id);
+
+    List<PaymentType> ByroomId(Long id);
 }
 
 

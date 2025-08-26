@@ -43,4 +43,21 @@
                            on ai.id=ri.apartment_id
         where ai.id=#{id} and ai.is_deleted=0;
     </select>
+
+
+
+    <select id="selectMinRent" resultType="java.math.BigDecimal">
+        select min(ri.rent) rent from apartment_info ai
+                          left join room_info ri
+                                    on ai.id=ri.apartment_id and ri.is_deleted=0
+        where ai.id=#{id} and ai.is_deleted=0;
+    </select>
+
+
+    <select id="ByroomId" resultType="com.atguigu.lease.model.entity.ApartmentInfo">
+        select ai.* from room_info ri
+                             left join apartment_info ai
+                                       on ri.apartment_id=ai.id and ai.is_deleted=0
+        where ri.id=#{id} and ri.is_deleted=0
+    </select>
 </mapper>
